@@ -1,0 +1,4 @@
+interface:
+  display_name: "移动端源码分析"
+  short_description: "追踪 Android 和鸿蒙的业务调用链、状态变化、配置与跨端实现差异"
+  default_prompt: "使用 $skill-ks-mobile-source-analysis 分析指定移动端功能的实际调用链和状态变化，附源码位置及验证边界。"

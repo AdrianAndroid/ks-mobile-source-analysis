@@ -8,7 +8,7 @@
 - 参考样本的 `GrowthPushGuideHeadImageManager` 在 `GrowthPushGuideManager.init()` 中预取；`pushHeadImageEnable` 默认 false，且实际请求还受系统通知状态和缓存有效性限制。加白名单之后应验证客户端读值与进程时序，而不是假设已命中实验。
 - 接口示例 `/rest/n/external-touch/head-image/cold-start` 的模型包含 `headImageUrl`、`expireDays`、`tagValue`、`extConfig`。服务端最终请求、域名、鉴权和响应由真实包或网络层证实；不要将同业务的 `getAIContent` 内容请求当成头图接口。
 - 本样本缓存把 URL、标签、配置、写入时间及有效天数放在 `Growth_Default`。预取侧检查有效期、getter 不检查过期的差异意味着刷新期间可能读取旧值；这是基于代码的推断，需验证并发、失败和页面读取时机。核对空值、0、时间跳变、跨账号、超大过期值和并发请求是否实际适用，不凭空判为线上缺陷。
-- Kotlin 元数据和 source 文件名可帮助对应混淆类，但须回到 DEX/完整 APK 对齐。此案例 `isCacheValid` 的 Java 反编译有错误：对照 fallback 指令确定真正跳转。注意别把反编译器产生的代码警告、占位值或符号别名当源码事实。
+- Kotlin 元数据和 source 文件名可帮助对应混淆类，但须回到 DEX/完整 APK 对齐。此案例 `isCacheValid` 的 Java 可读代码的控制流不准确：对照 fallback 指令确定真正跳转。注意别把工具生成的代码警告、占位值或符号别名当源码事实。
 - 推送引导由 EVE 结果的 `showGuide`、样式、scene、bundleId、componentName 等决定；`KrnBottomDialogMain` / `KrnBottomDialogWithSub` 可选择 KRN dialog，其他样式可走原生或 Snackbar。UI 参数中的头图 URL/config 有编码，标签及 null 的具体序列化需依据实际代码与运行时验证。
 - 包含 `GrowthPushGuide` 等字符串的资源搜索有明确边界：APK 资源文件名和选定文件内容无命中不能排除嵌套压缩、加密、其他目录或运行时下载。未取得 bundle 时，无法确定具体渲染、埋点、交互及 AI 生成来源。
 - 本样本在业务层检查儿童锁、成长中心等状态，也有通知引导已展示标记；这些不等于对所有弹窗互斥。KRN `showImmediate` 绕过同级 Fragment 普通 `show` 队列，但可能受有 ID 的可选拦截器影响。原生 fallback 用 `KwaiDialogBuilder` 的配置；单看 onPending/onDiscard 或类似名称无法证明优先级和排队策略。对截图不能仅凭 KRN 标记断言弹窗所属组件。
